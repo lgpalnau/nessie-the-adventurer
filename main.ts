@@ -15,10 +15,15 @@ mySprite = sprites.create(assets.image`
 myEnemySprite = sprites.create(assets.image`
     Nega Nessie
 `, SpriteKind.Enemy)
-myEnemySprite.say("LETS DO GREAT WORK!!!")
+myEnemySprite.sayText("LETS DO GREAT WORK!!!")
+//  myProjectile = sprites.create_projectile_from_sprite(assets.image("""
+//  myImage0
+//  """), myEnemySprite, 50, 155)
+//  myProjectile.set_stay_in_screen(True)
+tiles.placeOnTile(myEnemySprite, tiles.getTileLocation(9, 157))
+myEnemySprite.follow(mySprite, 30)
 mySprite.setStayInScreen(true)
 controller.moveSprite(mySprite, 100, 0)
 mySprite.ay = 500
 scene.cameraFollowSprite(mySprite)
-tiles.placeOnTile(mySprite, tiles.getTileLocation(0, 155))
-tiles.placeOnTile(myEnemySprite, tiles.getTileLocation(5, 157))
+tiles.placeOnTile(mySprite, tiles.getTileLocation(3, 155))

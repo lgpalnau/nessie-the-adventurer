@@ -16,10 +16,16 @@ mySprite = sprites.create(assets.image("""
 myEnemySprite = sprites.create(assets.image("""
     Nega Nessie
 """), SpriteKind.enemy)
-myEnemySprite.say("LETS DO GREAT WORK!!!")
+myEnemySprite.sayText("LETS DO GREAT WORK!!!")
+
+# myProjectile = sprites.create_projectile_from_sprite(assets.image("""
+# myImage0
+# """), myEnemySprite, 50, 155)
+# myProjectile.set_stay_in_screen(True)
+tiles.place_on_tile(myEnemySprite, tiles.get_tile_location(9, 157))
+myEnemySprite.follow(mySprite, 30)
 mySprite.set_stay_in_screen(True)
 controller.move_sprite(mySprite, 100, 0)
 mySprite.ay = 500
 scene.camera_follow_sprite(mySprite)
-tiles.place_on_tile(mySprite, tiles.get_tile_location(0, 155))
-tiles.place_on_tile(myEnemySprite, tiles.get_tile_location(5, 157))
+tiles.place_on_tile(mySprite, tiles.get_tile_location(3, 155))
