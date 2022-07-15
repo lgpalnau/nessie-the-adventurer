@@ -5,6 +5,7 @@ function initEnemy () {
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if ("squirt" == gunType) {
+        music.pewPew.play()
         if (1 == isFacingLeft) {
             projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, -200, 0)
         } else {
