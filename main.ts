@@ -1,7 +1,7 @@
 function initEnemy () {
     myEnemySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Enemy)
     tiles.placeOnRandomTile(myEnemySprite, assets.tile`gunPickupTile`)
-    myEnemySprite.follow(mySprite, 30)
+    myEnemySprite.follow(mySprite, speed)
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if ("squirt" == gunType) {
@@ -44,7 +44,7 @@ sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSpr
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
 })
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, otherSprite3) {
     myEnemySprite.destroy(effects.spray, 500)
     initEnemy()
 })
@@ -54,12 +54,14 @@ let mySprite: Sprite = null
 let myEnemySprite: Sprite = null
 let gunPickup: Sprite = null
 let gunType = ""
+let speed = 0
 game.setGameOverEffect(false, game.loseEffect)
 info.setLife(3)
 scene.setBackgroundColor(13)
 tiles.setCurrentTilemap(tilemap`level1`)
 initPlayer()
 music.setVolume(29)
+speed = 30
 music.playMelody("A F A B C5 G A G ", 120)
 gunType = "none"
 gunPickup = sprites.create(assets.image`Squirt Gun`, SpriteKind.Food)
@@ -78,6 +80,14 @@ game.onUpdate(function () {
         mySprite.setImage(assets.image`myImage`)
     }
     info.changeScoreBy(1)
+    if (info.score() >= 1000) {
+        myEnemySprite.follow(mySprite, speed + 20)
+    }
+    if (myEnemySprite.vx > 0) {
+        myEnemySprite.setImage(assets.image`Nega Nessie`)
+    } else {
+        myEnemySprite.setImage(assets.image`leftNegaNessie`)
+    }
 })
 game.onUpdateInterval(5000, function () {
     myEnemySprite.sayText("What's our HIGHEST priority right now?")
