@@ -64,6 +64,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "myImage5"
     },
+    "image13": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVQUAAAAAAABVBQAAAAAAAFUFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFUFAAAAAAAAVQUAAAAAAABVBQAAAAAAAAAAAAAAAAAAAAAAAAAAAABVBQAAAAAAAFUFAAAAAAAAVQUAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "projectile"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",

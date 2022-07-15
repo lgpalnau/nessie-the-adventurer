@@ -10,6 +10,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 1
+    if ("squirt" == gunType) {
+        projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, -200, 0)
+    }
 })
 function initPlayer () {
     mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
@@ -33,7 +36,11 @@ sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSpr
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
+    if ("squirt" == gunType) {
+        projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, 200, 0)
+    }
 })
+let projectile: Sprite = null
 let isFacingLeft = 0
 let mySprite: Sprite = null
 let myEnemySprite: Sprite = null
