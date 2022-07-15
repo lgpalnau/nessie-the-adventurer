@@ -1,3 +1,7 @@
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    nessie.vy = -300
+})
+let nessie: Sprite = null
 scene.setBackgroundColor(9)
 tiles.setCurrentTilemap(tilemap`level1`)
 let mySprite = sprites.create(img`
