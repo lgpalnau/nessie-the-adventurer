@@ -1,6 +1,6 @@
 function initEnemy () {
     myEnemySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Enemy)
-    tiles.placeOnTile(myEnemySprite, tiles.getTileLocation(9, 157))
+    tiles.placeOnRandomTile(myEnemySprite, assets.tile`gunPickupTile`)
     myEnemySprite.follow(mySprite, 30)
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -39,6 +39,10 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if ("squirt" == gunType) {
         projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, 200, 0)
     }
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    myEnemySprite.destroy(effects.spray, 500)
+    initEnemy()
 })
 let projectile: Sprite = null
 let isFacingLeft = 0
