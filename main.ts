@@ -1,3 +1,8 @@
+function initEnemy () {
+    myEnemySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Enemy)
+    tiles.placeOnTile(myEnemySprite, tiles.getTileLocation(9, 157))
+    myEnemySprite.follow(mySprite, 30)
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -300
@@ -6,6 +11,14 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 1
 })
+function initPlayer () {
+    mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
+    tiles.placeOnTile(mySprite, tiles.getTileLocation(3, 155))
+    mySprite.setStayInScreen(true)
+    scene.cameraFollowSprite(mySprite)
+    controller.moveSprite(mySprite, 100, 0)
+    mySprite.ay = 500
+}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
     tiles.placeOnRandomTile(myEnemySprite, assets.tile`binaryMid`)
     info.changeLifeBy(-1)
@@ -22,28 +35,21 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
 })
 let isFacingLeft = 0
-let gunPickup: Sprite = null
-let myEnemySprite: Sprite = null
 let mySprite: Sprite = null
+let myEnemySprite: Sprite = null
+let gunPickup: Sprite = null
 let gunType = ""
 game.setGameOverEffect(false, game.loseEffect)
 info.setLife(3)
 scene.setBackgroundColor(13)
 tiles.setCurrentTilemap(tilemap`level1`)
+initPlayer()
 music.setVolume(29)
 music.playMelody("A F A B C5 G A G ", 120)
 gunType = "none"
-mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
-myEnemySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Enemy)
 gunPickup = sprites.create(assets.image`Squirt Gun`, SpriteKind.Food)
-tiles.placeOnTile(myEnemySprite, tiles.getTileLocation(9, 157))
-myEnemySprite.follow(mySprite, 30)
-mySprite.setStayInScreen(true)
-controller.moveSprite(mySprite, 100, 0)
-mySprite.ay = 500
-scene.cameraFollowSprite(mySprite)
-tiles.placeOnTile(mySprite, tiles.getTileLocation(3, 155))
 tiles.placeOnRandomTile(gunPickup, assets.tile`gunPickupTile`)
+initEnemy()
 game.onUpdate(function () {
     if (isFacingLeft == 1) {
         if ("squirt" == gunType) {
