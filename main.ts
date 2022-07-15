@@ -38,7 +38,7 @@ let mySprite = sprites.create(img`
     `, SpriteKind.Player)
 animation.runMovementAnimation(
 mySprite,
-animation.animationPresets(animation.bobbing),
+animation.animationPresets(animation.shake),
 1000,
 true
 )
