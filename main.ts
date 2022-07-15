@@ -1,10 +1,10 @@
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    let nessie: Sprite = null
     nessie.vy = -300
 })
-let nessie: Sprite = null
 scene.setBackgroundColor(9)
 tiles.setCurrentTilemap(tilemap`level1`)
-let mySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Player)
+let mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
 animation.runMovementAnimation(
 mySprite,
 animation.animationPresets(animation.shake),
