@@ -127,6 +127,25 @@ ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 ........f7711f.fff11111f.ffff.
 ........ffffff...fffffff......
 `;
+            case "image3":
+            case "myImage0":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . 2 2 2 2 2 2 2 
+. 5 . . . . . . 4 4 4 4 4 4 4 4 
+f f f f f f . 5 5 5 5 5 5 5 5 5 
+f . . . . f f 7 7 7 7 7 7 7 7 7 
+f f f f f f . 8 8 8 8 8 8 8 8 8 
+f f . f . . . . 3 3 3 3 3 3 3 3 
+f . . . . . . . . a a a a a a a 
+f f . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`;
         }
         return null;
     })
