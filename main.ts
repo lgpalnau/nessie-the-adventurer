@@ -41,6 +41,7 @@ game.onUpdate(function () {
     } else {
         mySprite.setImage(assets.image`myImage`)
     }
+    info.changeScoreBy(1)
 })
 game.onUpdateInterval(5000, function () {
     myEnemySprite.sayText("What's our HIGHEST priority right now?")
