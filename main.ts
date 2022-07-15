@@ -30,6 +30,7 @@ function initPlayer () {
     mySprite.ay = 500
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
+    music.bigCrash.play()
     tiles.placeOnRandomTile(myEnemySprite, assets.tile`binaryMid`)
     info.changeLifeBy(-1)
     if (info.life() <= 0) {
@@ -45,6 +46,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, otherSprite3) {
+    music.zapped.play()
     myEnemySprite.destroy(effects.spray, 500)
     initEnemy()
 })
