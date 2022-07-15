@@ -3,6 +3,15 @@ function initEnemy () {
     tiles.placeOnRandomTile(myEnemySprite, assets.tile`gunPickupTile`)
     myEnemySprite.follow(mySprite, 30)
 }
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if ("squirt" == gunType) {
+        if (1 == isFacingLeft) {
+            projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, -200, 0)
+        } else {
+            projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, 200, 0)
+        }
+    }
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -300
@@ -10,9 +19,6 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 1
-    if ("squirt" == gunType) {
-        projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, -200, 0)
-    }
 })
 function initPlayer () {
     mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
@@ -36,9 +42,6 @@ sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSpr
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
-    if ("squirt" == gunType) {
-        projectile = sprites.createProjectileFromSprite(assets.image`projectile`, mySprite, 200, 0)
-    }
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     myEnemySprite.destroy(effects.spray, 500)
