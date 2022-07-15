@@ -4,6 +4,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 scene.setBackgroundColor(9)
 tiles.setCurrentTilemap(tilemap`level1`)
+music.setVolume(39)
+music.playMelody("C5 B G A B C5 E F ", 120)
 let mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
 animation.runMovementAnimation(
 mySprite,
