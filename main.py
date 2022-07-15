@@ -44,6 +44,7 @@ def initPlayer():
     mySprite.ay = 500
 
 def on_on_overlap(sprite2, otherSprite2):
+    music.big_crash.play()
     tiles.place_on_random_tile(myEnemySprite, assets.tile("""
         binaryMid
     """))
@@ -65,6 +66,7 @@ def on_right_pressed():
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def on_on_overlap3(sprite3, otherSprite3):
+    music.zapped.play()
     myEnemySprite.destroy(effects.spray, 500)
     initEnemy()
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap3)
@@ -76,7 +78,6 @@ myEnemySprite: Sprite = None
 gunPickup: Sprite = None
 gunType = ""
 speed = 0
-game.set_game_over_effect(False, game.lose_effect)
 info.set_life(3)
 scene.set_background_color(13)
 tiles.set_current_tilemap(tilemap("""
@@ -117,34 +118,19 @@ def on_on_update():
     if info.score() >= 1000:
         myEnemySprite.follow(mySprite, speed + 20)
     if myEnemySprite.vx > 0:
-        myEnemySprite.set_image(img("""
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
+        myEnemySprite.set_image(assets.image("""
+            Nega Nessie
         """))
+    else:
+        myEnemySprite.set_image(assets.image("Left Nega Nessie"))
 game.on_update(on_on_update)
 
+phrase_index = 0
+phrases = ["What's our HIGHEST priority right now?","What's this project's STATUS?","LETS DO GREAT WORK!!!"]
 def on_update_interval():
-    myEnemySprite.say_text("What's our HIGHEST priority right now?")
+    global phrase_index
+    myEnemySprite.say_text(phrases[phrase_index])
+    phrase_index += 1
+    if phrase_index > len(phrases):
+        phrase_index = 0
 game.on_update_interval(5000, on_update_interval)
-
-def on_update_interval2():
-    myEnemySprite.say_text("What's this project's STATUS?")
-game.on_update_interval(12000, on_update_interval2)
-
-def on_update_interval3():
-    myEnemySprite.say_text("LETS DO GREAT WORK!!!")
-game.on_update_interval(8000, on_update_interval3)

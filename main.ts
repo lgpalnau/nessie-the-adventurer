@@ -2,6 +2,7 @@ function initEnemy () {
     myEnemySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Enemy)
     tiles.placeOnRandomTile(myEnemySprite, assets.tile`gunPickupTile`)
     myEnemySprite.follow(mySprite, speed)
+    myEnemySprite.ay = 30
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if ("squirt" == gunType) {
@@ -36,11 +37,14 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherS
     if (info.life() <= 0) {
         mySprite.destroy()
         game.over(false)
+    } else {
+        music.powerDown.play()
     }
 })
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
     gunPickup.destroy()
     gunType = "squirt"
+    music.baDing.play()
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
@@ -50,6 +54,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, ot
     myEnemySprite.destroy(effects.spray, 500)
     initEnemy()
 })
+let phrase_index = 0
 let projectile: Sprite = null
 let isFacingLeft = 0
 let mySprite: Sprite = null
@@ -57,18 +62,18 @@ let myEnemySprite: Sprite = null
 let gunPickup: Sprite = null
 let gunType = ""
 let speed = 0
-game.setGameOverEffect(false, game.loseEffect)
-info.setLife(3)
+info.setLife(4)
 scene.setBackgroundColor(13)
 tiles.setCurrentTilemap(tilemap`level1`)
 initPlayer()
 music.setVolume(29)
 speed = 30
-music.playMelody("A F A B C5 G A G ", 120)
+music.playMelody("A F A B C5 G A G ", 159)
 gunType = "none"
 gunPickup = sprites.create(assets.image`Squirt Gun`, SpriteKind.Food)
 tiles.placeOnRandomTile(gunPickup, assets.tile`gunPickupTile`)
 initEnemy()
+let phrases = ["What's our HIGHEST priority right now?", "What's this project's STATUS?", "LETS DO GREAT WORK!!!"]
 game.onUpdate(function () {
     if (isFacingLeft == 1) {
         if ("squirt" == gunType) {
@@ -81,22 +86,22 @@ game.onUpdate(function () {
     } else {
         mySprite.setImage(assets.image`myImage`)
     }
-    info.changeScoreBy(1)
-    if (info.score() >= 1000) {
-        myEnemySprite.follow(mySprite, speed + 20)
-    }
     if (myEnemySprite.vx > 0) {
         myEnemySprite.setImage(assets.image`Nega Nessie`)
     } else {
-        myEnemySprite.setImage(assets.image`leftNegaNessie`)
+        myEnemySprite.setImage(assets.image`Left Nega Nessie`)
     }
 })
 game.onUpdateInterval(5000, function () {
-    myEnemySprite.sayText("What's our HIGHEST priority right now?")
+    myEnemySprite.sayText(phrases[phrase_index])
+    phrase_index += 1
+    if (phrase_index > phrases.length) {
+        phrase_index = 0
+    }
+    if (speed < 70 && info.score() >= 50) {
+        speed = speed + 20
+    }
 })
-game.onUpdateInterval(12000, function () {
-    myEnemySprite.sayText("What's this project's STATUS?")
-})
-game.onUpdateInterval(8000, function () {
-    myEnemySprite.sayText("LETS DO GREAT WORK!!!")
+game.onUpdateInterval(500, function () {
+    info.changeScoreBy(1)
 })
