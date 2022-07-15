@@ -43,7 +43,7 @@ controller.moveSprite(mySprite, 100, 0)
 mySprite.ay = 500
 scene.cameraFollowSprite(mySprite)
 tiles.placeOnTile(mySprite, tiles.getTileLocation(3, 155))
-tiles.placeOnRandomTile(gunPickup, assets.tile`myTile0`)
+tiles.placeOnRandomTile(gunPickup, assets.tile`gunPickupTile`)
 game.onUpdate(function () {
     if (isFacingLeft == 1) {
         if ("squirt" == gunType) {
