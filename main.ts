@@ -60,6 +60,7 @@ let speed = 0
 game.setGameOverEffect(false, game.loseEffect)
 info.setLife(3)
 scene.setBackgroundColor(13)
+scene.setBackgroundImage(assets.image`myImage7`)
 tiles.setCurrentTilemap(tilemap`level1`)
 initPlayer()
 music.setVolume(29)
