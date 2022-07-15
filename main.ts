@@ -32,3 +32,9 @@ let mySprite = sprites.create(img`
     ........f7711f.fff11111f.ffff.
     ........ffffff...fffffff......
     `, SpriteKind.Player)
+animation.runMovementAnimation(
+mySprite,
+animation.animationPresets(animation.bobbing),
+1000,
+true
+)
