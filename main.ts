@@ -1,8 +1,17 @@
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
+    if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
+        mySprite.vy = -400
+    }
+})
 function initEnemy () {
-    myEnemySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Enemy)
-    tiles.placeOnRandomTile(myEnemySprite, assets.tile`gunPickupTile`)
-    myEnemySprite.follow(mySprite, speed)
-    myEnemySprite.ay = 30
+    if (enemyCount == 0) {
+        enemyCount += 1
+        myEnemySprite = sprites.create(assets.image`Nega Nessie`, SpriteKind.Enemy)
+        tiles.placeOnRandomTile(myEnemySprite, assets.tile`gunPickupTile`)
+        myEnemySprite.follow(mySprite, speed)
+        myEnemySprite.ay = 200
+        myEnemySprite.setStayInScreen(true)
+    }
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if ("squirt" == gunType) {
@@ -19,6 +28,12 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         mySprite.vy = -300
     }
 })
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Player, function (sprite, otherSprite) {
+    if (sprite == emails) {
+        sprite.destroy(effects.spray, 500)
+        incurDamage(mySprite)
+    }
+})
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 1
 })
@@ -30,50 +45,68 @@ function initPlayer () {
     controller.moveSprite(mySprite, 100, 0)
     mySprite.ay = 500
 }
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
-    music.bigCrash.play()
-    tiles.placeOnRandomTile(myEnemySprite, assets.tile`binaryMid`)
+function incurDamage (mySprite: Sprite) {
     info.changeLifeBy(-1)
     if (info.life() <= 0) {
         mySprite.destroy()
         game.over(false)
     } else {
-        music.powerDown.play()
+        music.bigCrash.play()
     }
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
+    otherSprite2.destroy(effects.spray, 500)
+    incurDamage(sprite2)
+    destroyEnemy(otherSprite2)
+    initEnemy()
 })
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
-    gunPickup.destroy()
+    sprite.destroy()
     gunType = "squirt"
     music.baDing.play()
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
 })
+function destroyEnemy (mySprite: Sprite) {
+    enemyCount += -1
+    mySprite.destroy(effects.spray, 500)
+}
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, otherSprite3) {
-    music.zapped.play()
-    myEnemySprite.destroy(effects.spray, 500)
-    initEnemy()
+    if (sprite3 != emails) {
+        music.zapped.play()
+        destroyEnemy(otherSprite3)
+        initEnemy()
+    }
 })
 let phrase_index = 0
+let emails: Sprite = null
 let projectile: Sprite = null
 let isFacingLeft = 0
-let mySprite: Sprite = null
 let myEnemySprite: Sprite = null
-let gunPickup: Sprite = null
+let mySprite: Sprite = null
 let gunType = ""
+let enemyCount = 0
 let speed = 0
 info.setLife(4)
 scene.setBackgroundColor(13)
 tiles.setCurrentTilemap(tilemap`level1`)
+game.splash("Nessie the Adventurer", "Press any key to begin, how long will you survive?")
 initPlayer()
 music.setVolume(29)
-speed = 30
+speed = 20
+enemyCount = 0
 music.playMelody("A F A B C5 G A G ", 159)
 gunType = "none"
-gunPickup = sprites.create(assets.image`Squirt Gun`, SpriteKind.Food)
+let gunPickup = sprites.create(assets.image`Squirt Gun`, SpriteKind.Food)
 tiles.placeOnRandomTile(gunPickup, assets.tile`gunPickupTile`)
 initEnemy()
-let phrases = ["What's our HIGHEST priority right now?", "What's this project's STATUS?", "LETS DO GREAT WORK!!!"]
+let phrases = [
+"What's our HIGHEST priority right now?",
+"What's this project's STATUS?",
+"LETS DO GREAT WORK!!!",
+"\"The THING doesn't work\""
+]
 game.onUpdate(function () {
     if (isFacingLeft == 1) {
         if ("squirt" == gunType) {
@@ -95,13 +128,20 @@ game.onUpdate(function () {
 game.onUpdateInterval(5000, function () {
     myEnemySprite.sayText(phrases[phrase_index])
     phrase_index += 1
-    if (phrase_index > phrases.length) {
+    if (phrase_index >= phrases.length) {
         phrase_index = 0
     }
     if (speed < 70 && info.score() >= 50) {
-        speed = speed + 20
+        speed += 20
     }
 })
 game.onUpdateInterval(500, function () {
     info.changeScoreBy(1)
+})
+game.onUpdateInterval(3000, function () {
+    if (myEnemySprite.vx > 0) {
+        emails = sprites.createProjectileFromSprite(assets.image`gmail`, myEnemySprite, 30, 0)
+    } else {
+        emails = sprites.createProjectileFromSprite(assets.image`gmail`, myEnemySprite, -30, 0)
+    }
 })
