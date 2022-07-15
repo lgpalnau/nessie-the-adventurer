@@ -1,4 +1,5 @@
 myEnemySprite: Sprite = None
+mySprite: Sprite = None
 
 def change_text_interval():
     myEnemySprite.sayText("What's our HIGHEST priority right now?")
@@ -11,9 +12,16 @@ def change_text_interval_3():
 
 def on_a_pressed():
     mySprite.vy = -300
+
+def my_overlap_function():
+    mySprite.destroy()
+    game.set_game_over_effect(False, game.lose_effect)
+    game.over(False)
+
+
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-mySprite: Sprite = None
+
 scene.set_background_color(9)
 tiles.set_current_tilemap(tilemap("""
     level1
@@ -26,7 +34,6 @@ mySprite = sprites.create(assets.image("""
 myEnemySprite = sprites.create(assets.image("""
     Nega Nessie
 """), SpriteKind.enemy)
-#myEnemySprite.sayText("LETS DO GREAT WORK!!!")
 
 tiles.place_on_tile(myEnemySprite, tiles.get_tile_location(9, 157))
 myEnemySprite.follow(mySprite, 30)
@@ -40,3 +47,5 @@ tiles.place_on_tile(mySprite, tiles.get_tile_location(3, 155))
 game.on_update_interval(5000, change_text_interval)
 game.on_update_interval(8000, change_text_interval_2)
 game.on_update_interval(12000, change_text_interval_3)
+
+sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, my_overlap_function)

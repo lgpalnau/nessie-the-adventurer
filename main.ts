@@ -1,8 +1,8 @@
 let myEnemySprite : Sprite = null
+let mySprite : Sprite = null
 controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
     mySprite.vy = -300
 })
-let mySprite : Sprite = null
 scene.setBackgroundColor(9)
 tiles.setCurrentTilemap(tilemap`
     level1
@@ -15,7 +15,6 @@ mySprite = sprites.create(assets.image`
 myEnemySprite = sprites.create(assets.image`
     Nega Nessie
 `, SpriteKind.Enemy)
-// myEnemySprite.sayText("LETS DO GREAT WORK!!!")
 tiles.placeOnTile(myEnemySprite, tiles.getTileLocation(9, 157))
 myEnemySprite.follow(mySprite, 30)
 mySprite.setStayInScreen(true)
@@ -31,4 +30,9 @@ game.onUpdateInterval(8000, function change_text_interval_2() {
 })
 game.onUpdateInterval(12000, function change_text_interval_3() {
     myEnemySprite.sayText("What's this project's STATUS?")
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function my_overlap_function() {
+    mySprite.destroy()
+    game.setGameOverEffect(false, game.loseEffect)
+    game.over(false)
 })
