@@ -1,13 +1,12 @@
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    let nessie: Sprite = null
-    nessie.vy = -300
+    mySprite.vy = -300
 })
+let mySprite: Sprite = null
 scene.setBackgroundColor(9)
 tiles.setCurrentTilemap(tilemap`level1`)
-let mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
-animation.runMovementAnimation(
-mySprite,
-animation.animationPresets(animation.shake),
-1000,
-true
-)
+mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
+mySprite.setStayInScreen(true)
+controller.moveSprite(mySprite, 100, 0)
+mySprite.ay = 500
+scene.cameraFollowSprite(mySprite)
+tiles.placeOnTile(mySprite, tiles.getTileLocation(0, 1))
