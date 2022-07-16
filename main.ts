@@ -62,15 +62,28 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherS
 })
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
-    gunType = "squirt"
-    music.baDing.play()
+    if (sprite == mySprite2) {
+        gunType = "squirt"
+        music.baDing.play()
+    } else {
+        music.powerUp.play()
+        info.changeLifeBy(1)
+    }
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     isFacingLeft = 0
 })
+function dropWeapon () {
+    gunPickup = sprites.create(assets.image`Squirt Gun`, SpriteKind.Food)
+    tiles.placeOnRandomTile(gunPickup, assets.tile`gunPickupTile`)
+}
 function destroyEnemy (mySprite: Sprite) {
     enemyCount += -1
     mySprite.destroy(effects.spray, 500)
+}
+function dropLife () {
+    mySprite2 = sprites.create(assets.image`chip`, SpriteKind.Food)
+    tiles.placeOnRandomTile(mySprite2, assets.tile`gunPickupTile`)
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, otherSprite3) {
     if (sprite3 != emails) {
@@ -80,6 +93,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, ot
     }
 })
 let phrase_index = 0
+let gunPickup: Sprite = null
+let mySprite2: Sprite = null
 let emails: Sprite = null
 let projectile: Sprite = null
 let isFacingLeft = 0
@@ -91,21 +106,26 @@ let speed = 0
 info.setLife(4)
 scene.setBackgroundColor(13)
 tiles.setCurrentTilemap(tilemap`level1`)
+music.playMelody("A F A B C5 G A G ", 159)
 game.splash("Nessie the Adventurer", "Press any key to begin, how long will you survive?")
 initPlayer()
 music.setVolume(29)
 speed = 20
 enemyCount = 0
-music.playMelody("A F A B C5 G A G ", 159)
 gunType = "none"
-let gunPickup = sprites.create(assets.image`Squirt Gun`, SpriteKind.Food)
-tiles.placeOnRandomTile(gunPickup, assets.tile`gunPickupTile`)
+dropWeapon()
+dropWeapon()
+dropLife()
+dropLife()
 initEnemy()
 let phrases = [
 "What's our HIGHEST priority right now?",
 "What's this project's STATUS?",
-"LETS DO GREAT WORK!!!",
-"\"The THING doesn't work\""
+"What am I'm doing",
+"The THING doesn't work",
+"It works on my machine",
+"I have no idea what this code does",
+"I'm going too slow"
 ]
 game.onUpdate(function () {
     if (isFacingLeft == 1) {

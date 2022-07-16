@@ -1,6 +1,6 @@
 def on_overlap_tile(sprite, location):
-    if mySprite2.is_hitting_tile(CollisionDirection.BOTTOM):
-        mySprite2.vy = -400
+    if mySprite3.is_hitting_tile(CollisionDirection.BOTTOM):
+        mySprite3.vy = -400
 scene.on_overlap_tile(SpriteKind.player,
     assets.tile("""
         myTile0
@@ -8,16 +8,18 @@ scene.on_overlap_tile(SpriteKind.player,
     on_overlap_tile)
 
 def initEnemy():
-    global myEnemySprite
-    myEnemySprite = sprites.create(assets.image("""
-        Nega Nessie
-    """), SpriteKind.enemy)
-    tiles.place_on_random_tile(myEnemySprite, assets.tile("""
-        gunPickupTile
-    """))
-    myEnemySprite.follow(mySprite2, speed)
-    myEnemySprite.ay = 100
-    myEnemySprite.set_stay_in_screen(True)
+    global enemyCount, myEnemySprite
+    if enemyCount == 0:
+        enemyCount += 1
+        myEnemySprite = sprites.create(assets.image("""
+            Nega Nessie
+        """), SpriteKind.enemy)
+        tiles.place_on_random_tile(myEnemySprite, assets.tile("""
+            gunPickupTile
+        """))
+        myEnemySprite.follow(mySprite3, speed)
+        myEnemySprite.ay = 200
+        myEnemySprite.set_stay_in_screen(True)
 
 def on_b_pressed():
     global projectile
@@ -26,22 +28,22 @@ def on_b_pressed():
         if 1 == isFacingLeft:
             projectile = sprites.create_projectile_from_sprite(assets.image("""
                 projectile
-            """), mySprite2, -200, 0)
+            """), mySprite3, -200, 0)
         else:
             projectile = sprites.create_projectile_from_sprite(assets.image("""
                 projectile
-            """), mySprite2, 200, 0)
+            """), mySprite3, 200, 0)
 controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
 
 def on_a_pressed():
-    if mySprite2.is_hitting_tile(CollisionDirection.BOTTOM):
-        mySprite2.vy = -300
+    if mySprite3.is_hitting_tile(CollisionDirection.BOTTOM):
+        mySprite3.vy = -300
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 def on_on_overlap(sprite2, otherSprite):
     if sprite2 == emails:
         sprite2.destroy(effects.spray, 500)
-        incurDamage(mySprite2)
+        incurDamage(mySprite3)
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.player, on_on_overlap)
 
 def on_left_pressed():
@@ -50,15 +52,15 @@ def on_left_pressed():
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def initPlayer():
-    global mySprite2
-    mySprite2 = sprites.create(assets.image("""
+    global mySprite3
+    mySprite3 = sprites.create(assets.image("""
         myImage
     """), SpriteKind.player)
-    tiles.place_on_tile(mySprite2, tiles.get_tile_location(3, 155))
-    mySprite2.set_stay_in_screen(True)
-    scene.camera_follow_sprite(mySprite2)
-    controller.move_sprite(mySprite2, 100, 0)
-    mySprite2.ay = 500
+    tiles.place_on_tile(mySprite3, tiles.get_tile_location(3, 155))
+    mySprite3.set_stay_in_screen(True)
+    scene.camera_follow_sprite(mySprite3)
+    controller.move_sprite(mySprite3, 100, 0)
+    mySprite3.ay = 500
 def incurDamage(mySprite: Sprite):
     info.change_life_by(-1)
     if info.life() <= 0:
@@ -70,6 +72,7 @@ def incurDamage(mySprite: Sprite):
 def on_on_overlap2(sprite22, otherSprite2):
     otherSprite2.destroy(effects.spray, 500)
     incurDamage(sprite22)
+    destroyEnemy(otherSprite2)
     initEnemy()
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
 
@@ -85,10 +88,15 @@ def on_right_pressed():
     isFacingLeft = 0
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
+def destroyEnemy(mySprite2: Sprite):
+    global enemyCount
+    enemyCount += -1
+    mySprite2.destroy(effects.spray, 500)
+
 def on_on_overlap4(sprite32, otherSprite32):
-    if sprite32 == emails:
+    if sprite32 != emails:
         music.zapped.play()
-        otherSprite32.destroy(effects.spray, 500)
+        destroyEnemy(otherSprite32)
         initEnemy()
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap4)
 
@@ -97,8 +105,9 @@ emails: Sprite = None
 projectile: Sprite = None
 isFacingLeft = 0
 myEnemySprite: Sprite = None
-mySprite2: Sprite = None
+mySprite3: Sprite = None
 gunType = ""
+enemyCount = 0
 speed = 0
 info.set_life(4)
 scene.set_background_color(13)
@@ -109,7 +118,8 @@ game.splash("Nessie the Adventurer",
     "Press any key to begin, how long will you survive?")
 initPlayer()
 music.set_volume(29)
-speed = 30
+speed = 20
+enemyCount = 0
 music.play_melody("A F A B C5 G A G ", 159)
 gunType = "none"
 gunPickup = sprites.create(assets.image("""
@@ -121,25 +131,28 @@ tiles.place_on_random_tile(gunPickup, assets.tile("""
 initEnemy()
 phrases = ["What's our HIGHEST priority right now?",
     "What's this project's STATUS?",
-    "LETS DO GREAT WORK!!!",
-    "\"The THING doesn't work\""]
+    "What am I'm doing",
+    "The THING doesn't work",
+    "It works on my machine",
+    "I have no idea what this code does",
+    "I'm going too slow"]
 
 def on_on_update():
     if isFacingLeft == 1:
         if "squirt" == gunType:
-            mySprite2.set_image(assets.image("""
+            mySprite3.set_image(assets.image("""
                 nessieSquirt0
             """))
         else:
-            mySprite2.set_image(assets.image("""
+            mySprite3.set_image(assets.image("""
                 myImage5
             """))
     elif "squirt" == gunType:
-        mySprite2.set_image(assets.image("""
+        mySprite3.set_image(assets.image("""
             nessieSquirt
         """))
     else:
-        mySprite2.set_image(assets.image("""
+        mySprite3.set_image(assets.image("""
             myImage
         """))
     if myEnemySprite.vx > 0:
@@ -156,10 +169,10 @@ def on_update_interval():
     global phrase_index, speed
     myEnemySprite.say_text(phrases[phrase_index])
     phrase_index += 1
-    if phrase_index > len(phrases):
+    if phrase_index >= len(phrases):
         phrase_index = 0
     if speed < 70 and info.score() >= 50:
-        speed = speed + 20
+        speed += 20
 game.on_update_interval(5000, on_update_interval)
 
 def on_update_interval2():
