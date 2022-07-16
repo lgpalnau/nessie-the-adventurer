@@ -105,6 +105,7 @@ let enemyCount = 0
 let speed = 0
 info.setLife(4)
 scene.setBackgroundColor(13)
+scene.setBackgroundImage(assets.image`myImage7`)
 tiles.setCurrentTilemap(tilemap`level1`)
 music.playMelody("A F A B C5 G A G ", 159)
 game.splash("Nessie the Adventurer", "Press any key to begin, how long will you survive?")
