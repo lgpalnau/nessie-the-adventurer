@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Friend = SpriteKind.create()
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -400
@@ -79,7 +82,12 @@ function dropWeapon () {
 }
 function destroyEnemy (mySprite: Sprite) {
     enemyCount += -1
-    mySprite.destroy(effects.spray, 500)
+    mySprite.destroy(effects.spray, 200)
+}
+function spawnThug () {
+    thugSprite = sprites.create(assets.image`myImage4`, SpriteKind.Friend)
+    tiles.placeOnRandomTile(thugSprite, assets.tile`thugSpawn`)
+    thugSprite.sayText("Sup homie")
 }
 function dropLife () {
     mySprite2 = sprites.create(assets.image`chip`, SpriteKind.Food)
@@ -94,6 +102,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, ot
 })
 let phrase_index = 0
 let mySprite2: Sprite = null
+let thugSprite: Sprite = null
 let gunPickup: Sprite = null
 let emails: Sprite = null
 let projectile: Sprite = null
@@ -118,6 +127,7 @@ dropWeapon()
 dropLife()
 dropLife()
 initEnemy()
+spawnThug()
 let phrases = [
 "What's our HIGHEST priority right now?",
 "What's this project's STATUS?",
