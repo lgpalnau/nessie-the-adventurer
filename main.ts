@@ -53,17 +53,25 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite32, o
 function spawnCoins (cointCount: number) {
     for (let index = 0; index < cointCount; index++) {
         coinSprite = sprites.create(img`
-            . . b b b b . . 
-            . b 5 5 5 5 b . 
-            b 5 d 3 3 d 5 b 
-            b 5 3 5 5 1 5 b 
-            c 5 3 5 5 1 d c 
-            c d d 1 1 d d c 
-            . f d d d d f . 
-            . . f f f f . . 
+            . . . . . . b b b b . . . . . . 
+            . . . . . . b 4 4 4 b . . . . . 
+            . . . . . . b b 4 4 4 b . . . . 
+            . . . . . b 4 b b b 4 4 b . . . 
+            . . . . b d 5 5 5 4 b 4 4 b . . 
+            . . . . b 3 2 3 5 5 4 e 4 4 b . 
+            . . . b d 2 2 2 5 7 5 4 e 4 4 e 
+            . . . b 5 3 2 3 5 5 5 5 e e e e 
+            . . b d 7 5 5 5 3 2 3 5 5 e e e 
+            . . b 5 5 5 5 5 2 2 2 5 5 d e e 
+            . b 3 2 3 5 7 5 3 2 3 5 d d e 4 
+            . b 2 2 2 5 5 5 5 5 5 d d e 4 . 
+            b d 3 2 d 5 5 5 d d d 4 4 . . . 
+            b 5 5 5 5 d d 4 4 4 4 . . . . . 
+            4 d d d 4 4 4 . . . . . . . . . 
+            4 4 4 4 . . . . . . . . . . . . 
             `, SpriteKind.Coin)
         tiles.placeOnTile(coinSprite, coinSpawns.pop())
-        coinSprite.y = coinSprite.y - 16
+        coinSprite.y = coinSprite.y - 32
     }
 }
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -147,13 +155,13 @@ music.setVolume(29)
 speed = 20
 enemyCount = 0
 gunType = "none"
-coinSpawns = tiles.getTilesByType(assets.tile`binaryMid`)
+coinSpawns = tiles.getTilesByType(assets.tile`binaryBottom`)
 dropWeapon()
 dropWeapon()
 dropLife()
 dropLife()
 initEnemy()
-spawnCoins(32)
+spawnCoins(12)
 spawnThug()
 let phrases = [
 "What's our HIGHEST priority right now?",
