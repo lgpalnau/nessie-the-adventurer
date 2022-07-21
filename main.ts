@@ -62,7 +62,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherS
 })
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.destroy()
-    if (sprite == mySprite2) {
+    if (sprite == gunPickup) {
         gunType = "squirt"
         music.baDing.play()
     } else {
@@ -83,7 +83,7 @@ function destroyEnemy (mySprite: Sprite) {
 }
 function dropLife () {
     mySprite2 = sprites.create(assets.image`chip`, SpriteKind.Food)
-    tiles.placeOnRandomTile(mySprite2, assets.tile`gunPickupTile`)
+    tiles.placeOnRandomTile(mySprite2, assets.tile`extraLife`)
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, otherSprite3) {
     if (sprite3 != emails) {
@@ -93,8 +93,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, ot
     }
 })
 let phrase_index = 0
-let gunPickup: Sprite = null
 let mySprite2: Sprite = null
+let gunPickup: Sprite = null
 let emails: Sprite = null
 let projectile: Sprite = null
 let isFacingLeft = 0
@@ -105,7 +105,6 @@ let enemyCount = 0
 let speed = 0
 info.setLife(4)
 scene.setBackgroundColor(13)
-scene.setBackgroundImage(assets.image`myImage7`)
 tiles.setCurrentTilemap(tilemap`level1`)
 music.playMelody("A F A B C5 G A G ", 159)
 game.splash("Nessie the Adventurer", "Press any key to begin, how long will you survive?")
