@@ -4,7 +4,7 @@ namespace SpriteKind {
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite2, otherSprite) {
     otherSprite.destroy()
-    music.baDing.play()
+    music.powerUp.play()
     info.changeScoreBy(100)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
@@ -71,7 +71,7 @@ function spawnCoins (cointCount: number) {
             4 4 4 4 . . . . . . . . . . . . 
             `, SpriteKind.Coin)
         tiles.placeOnTile(coinSprite, coinSpawns.pop())
-        coinSprite.y = coinSprite.y - 32
+        coinSprite.y = coinSprite.y - 36
     }
 }
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -161,7 +161,7 @@ dropWeapon()
 dropLife()
 dropLife()
 initEnemy()
-spawnCoins(12)
+spawnCoins(24)
 spawnThug()
 let phrases = [
 "What's our HIGHEST priority right now?",
