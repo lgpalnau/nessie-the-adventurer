@@ -1,3 +1,8 @@
+@namespace
+class SpriteKind:
+    Friend = SpriteKind.create()
+    Coin = SpriteKind.create()
+
 def on_overlap_tile(sprite, location):
     if mySprite3.is_hitting_tile(CollisionDirection.BOTTOM):
         mySprite3.vy = -400
@@ -21,6 +26,11 @@ def initEnemy():
         myEnemySprite.ay = 200
         myEnemySprite.set_stay_in_screen(True)
 
+def on_on_overlap(sprite2, otherSprite):
+    otherSprite.destroy()
+    info.change_score_by(100)
+sprites.on_overlap(SpriteKind.player, SpriteKind.Coin, on_on_overlap)
+
 def on_b_pressed():
     global projectile
     if "squirt" == gunType:
@@ -40,11 +50,28 @@ def on_a_pressed():
         mySprite3.vy = -300
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-def on_on_overlap(sprite2, otherSprite):
-    if sprite2 == emails:
-        sprite2.destroy(effects.spray, 500)
+def on_on_overlap2(sprite3, otherSprite2):
+    if sprite3 == emails:
+        sprite3.destroy(effects.spray, 500)
         incurDamage(mySprite3)
-sprites.on_overlap(SpriteKind.projectile, SpriteKind.player, on_on_overlap)
+sprites.on_overlap(SpriteKind.projectile, SpriteKind.player, on_on_overlap2)
+
+def spawnCoins(cointCount: number):
+    global coinSprite
+    for index in range(cointCount):
+        coinSprite = sprites.create(img("""
+                . . b b b b . . 
+                            . b 5 5 5 5 b . 
+                            b 5 d 3 3 d 5 b 
+                            b 5 3 5 5 1 5 b 
+                            c 5 3 5 5 1 d c 
+                            c d d 1 1 d d c 
+                            . f d d d d f . 
+                            . . f f f f . .
+            """),
+            SpriteKind.Coin)
+        tiles.place_on_tile(coinSprite, coinSpawns.pop())
+        coinSprite.y = coinSprite.y - 16
 
 def on_left_pressed():
     global isFacingLeft
@@ -69,43 +96,78 @@ def incurDamage(mySprite: Sprite):
     else:
         music.big_crash.play()
 
-def on_on_overlap2(sprite22, otherSprite2):
-    otherSprite2.destroy(effects.spray, 500)
+def on_on_overlap3(sprite22, otherSprite22):
+    otherSprite22.destroy(effects.spray, 500)
     incurDamage(sprite22)
-    destroyEnemy(otherSprite2)
+    destroyEnemy(otherSprite22)
     initEnemy()
-sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
+sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap3)
 
-def on_on_overlap3(sprite3, otherSprite3):
+def on_on_overlap4(sprite4, otherSprite3):
     global gunType
-    sprite3.destroy()
-    gunType = "squirt"
-    music.ba_ding.play()
-sprites.on_overlap(SpriteKind.food, SpriteKind.player, on_on_overlap3)
+    sprite4.destroy()
+    if sprite4 == gunPickup:
+        gunType = "squirt"
+        music.ba_ding.play()
+    else:
+        music.power_up.play()
+        info.change_life_by(1)
+        info.change_score_by(1500)
+sprites.on_overlap(SpriteKind.food, SpriteKind.player, on_on_overlap4)
 
 def on_right_pressed():
     global isFacingLeft
     isFacingLeft = 0
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
+def dropWeapon():
+    global gunPickup
+    gunPickup = sprites.create(assets.image("""
+        Squirt Gun
+    """), SpriteKind.food)
+    tiles.place_on_random_tile(gunPickup, assets.tile("""
+        gunPickupTile
+    """))
 def destroyEnemy(mySprite2: Sprite):
     global enemyCount
     enemyCount += -1
-    mySprite2.destroy(effects.spray, 500)
+    mySprite2.destroy(effects.spray, 200)
+def spawnThug():
+    global thugSprite
+    thugSprite = sprites.create(assets.image("""
+        myImage4
+    """), SpriteKind.Friend)
+    tiles.place_on_random_tile(thugSprite, assets.tile("""
+        thugSpawn
+    """))
+    thugSprite.say_text("Sup homie")
+def dropLife():
+    global mySprite22
+    mySprite22 = sprites.create(assets.image("""
+        chip
+    """), SpriteKind.food)
+    tiles.place_on_random_tile(mySprite22, assets.tile("""
+        extraLife
+    """))
 
-def on_on_overlap4(sprite32, otherSprite32):
+def on_on_overlap5(sprite32, otherSprite32):
     if sprite32 != emails:
         music.zapped.play()
         destroyEnemy(otherSprite32)
         initEnemy()
-sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap4)
+sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap5)
 
 phrase_index = 0
+mySprite22: Sprite = None
+thugSprite: Sprite = None
+gunPickup: Sprite = None
+coinSprite: Sprite = None
 emails: Sprite = None
 projectile: Sprite = None
 isFacingLeft = 0
 myEnemySprite: Sprite = None
 mySprite3: Sprite = None
+coinSpawns: List[tiles.Location] = []
 gunType = ""
 enemyCount = 0
 speed = 0
@@ -114,21 +176,24 @@ scene.set_background_color(13)
 tiles.set_current_tilemap(tilemap("""
     level1
 """))
+music.play_melody("A F A B C5 G A G ", 159)
 game.splash("Nessie the Adventurer",
     "Press any key to begin, how long will you survive?")
 initPlayer()
 music.set_volume(29)
 speed = 20
 enemyCount = 0
-music.play_melody("A F A B C5 G A G ", 159)
 gunType = "none"
-gunPickup = sprites.create(assets.image("""
-    Squirt Gun
-"""), SpriteKind.food)
-tiles.place_on_random_tile(gunPickup, assets.tile("""
-    gunPickupTile
+coinSpawns = tiles.get_tiles_by_type(assets.tile("""
+    binaryMid
 """))
+dropWeapon()
+dropWeapon()
+dropLife()
+dropLife()
 initEnemy()
+spawnCoins(100)
+spawnThug()
 phrases = ["What's our HIGHEST priority right now?",
     "What's this project's STATUS?",
     "What am I'm doing",
