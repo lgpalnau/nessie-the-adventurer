@@ -51,7 +51,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite32, o
     }
 })
 function spawnCoins (cointCount: number) {
-    for (let index = 0; index < cointCount; index++) {
+    let randomTile: any;
+for (let index = 0; index < cointCount; index++) {
         coinSprite = sprites.create(img`
             . . . . . . b b b b . . . . . . 
             . . . . . . b 4 4 4 b . . . . . 
@@ -70,8 +71,10 @@ function spawnCoins (cointCount: number) {
             4 d d d 4 4 4 . . . . . . . . . 
             4 4 4 4 . . . . . . . . . . . . 
             `, SpriteKind.Coin)
-        tiles.placeOnTile(coinSprite, coinSpawns.pop())
-        coinSprite.y = coinSprite.y - 36
+        randomTile = Math.pickRandom(coinSpawns)
+coinSpawns.removeElement(randomTile)
+tiles.placeOnTile(coinSprite, randomTile)
+        coinSprite.y = coinSprite.y - 35
     }
 }
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -141,10 +144,10 @@ let projectile: Sprite = null
 let isFacingLeft = 0
 let myEnemySprite: Sprite = null
 let mySprite3: Sprite = null
-let coinSpawns: tiles.Location[] = []
 let gunType = ""
 let enemyCount = 0
 let speed = 0
+let coinSpawns : tiles.Location[] = []
 info.setLife(4)
 scene.setBackgroundColor(13)
 tiles.setCurrentTilemap(tilemap`level1`)
@@ -161,7 +164,7 @@ dropWeapon()
 dropLife()
 dropLife()
 initEnemy()
-spawnCoins(24)
+spawnCoins(20)
 spawnThug()
 let phrases = [
 "What's our HIGHEST priority right now?",
